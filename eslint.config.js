@@ -28,7 +28,7 @@ export default defineConfig([
       "prettier/prettier": [
         "error",
         {
-          singleQuote: true,
+          singleQuote: false,
           semi: false,
           tabWidth: 2,
           trailingComma: "es5",
