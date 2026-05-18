@@ -166,7 +166,7 @@ Table group_members {
   group_id uuid [not null, ref: > groups.id]
   user_id uuid [not null, ref: > profiles.id]
   role group_member_role [not null, default: 'member']
-  setting group_setting [not null]
+  setting group_setting [not null, default: 'mentions']
   joined_at timestamptz [not null, default: `now()`]
 
   Note: '''
