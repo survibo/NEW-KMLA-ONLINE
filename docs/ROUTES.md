@@ -1,118 +1,109 @@
-## 5. Route
+# Routes
 
-## 루트 / 인증
+This app uses React Router v7 Framework Mode with SPA mode enabled in `react-router.config.ts`.
 
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/` | 로그인 여부와 승인 상태에 따라 `/`, `/login`, `/profile/set`, `/pending`으로 분기 | 전체 |
-| `/login` | Google OAuth 로그인? | 비로그인 |
-| `/logout` | 로그아웃 처리 | 로그인 유저 |
+`app/routes.ts` is the single source of truth for URL paths and route module files. Route modules under `app/routes/` should not duplicate their own URL path strings. If a route path changes, update `app/routes.ts` only.
 
-## 가입 / 승인
+## Routing Rules
 
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/profile/set` | 가입 후 기본 정보 입력: 이름, 학번, 행정반, 기수, 성별, 전화번호, 생일 | 로그인 유저, status 미완료 |
-| `/pending` | 관리자 승인 대기 페이지 | status = pending |
-| `/rejected` | 가입 승인 거절 안내 | status = rejected |
+- Define all URL patterns in `app/routes.ts` using `index`, `route`, `layout`, and `prefix` from `@react-router/dev/routes`.
+- Use guard layouts from `app/guards/` to group routes by access rules.
+- Keep route modules focused on rendering the page for that route.
+- Do not add a new `src/main.tsx`, `src/routes/router.tsx`, or Vite `index.html`; framework mode owns the app entrypoint.
+- Shared route UI lives in `app/components/`.
+- Existing design-system components remain in `src/components/` and global styles remain in `src/styles/global.css`.
 
-## 홈 / 메뉴 / 검색
+## App Structure
 
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/` | 메인 페이지: 이름, 학번, 즐겨찾기 그룹, 오늘의 급식, 메뉴 바로가기 | accepted 유저 |
-| `/search` | 전체 검색: 그룹, 사용자 검색 | accepted 유저 |
-| `/menu` | 설정, 바로가기, 프로필 수정, 로그아웃 | accepted 유저 |
+```txt
+app/
+  root.tsx
+  routes.ts
 
-## 프로필
+  components/
+    ErrorPage.tsx
+    PlaceholderPage.tsx
 
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/profile` | 내 프로필 | accepted 유저 |
-| `/profile/edit` | 내 프로필 수정 | accepted 유저 |
-| `/profile/:userId` | 다른 사용자 프로필 | accepted 유저 |
-| `/profile/:userId/posts` | 해당 사용자가 작성한 게시글 목록 | accepted 유저 + 조회 권한 |
+  guards/
+    accepted.tsx
+    admin.tsx
+    authenticated.tsx
+    chat-room-member.tsx
+    club-manager.tsx
+    group-access.tsx
+    group-manager.tsx
+    group-member.tsx
+    karaoke-permission.tsx
+    post-owner.tsx
+    public-only.tsx
 
-## 그룹
+  routes/
+    home.tsx
+    notifications.tsx
+    auth/
+    chat/
+    clubs/
+    errors/
+    gisangsong/
+    groups/
+    home/
+    life/
+    onboarding/
+    profile/
+```
 
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/groups` | 공식 게시판, 사설 게시판, 즐겨찾는 게시판 목록 | accepted 유저 |
-| `/groups/new` | 사설 그룹 생성 | accepted 유저 |
-| `/groups/:groupId` | 그룹 홈 / 게시글 목록 | 그룹 접근 권한 |
-| `/groups/:groupId/about` | 그룹 설명 | 그룹 접근 권한 |
-| `/groups/:groupId/members` | 그룹 멤버 목록 | 그룹 접근 권한 |
-| `/groups/:groupId/settings` | 알림 설정, 그룹 나가기, 즐겨찾기, 신고 | 그룹 멤버 |
-| `/groups/:groupId/manage` | 그룹명/설명 수정, 멤버 관리 | group owner/admin 또는 site admin |
-| `/groups/:groupId/search` | 그룹 내 게시글 검색 | 그룹 접근 권한 |
-| `/groups/:groupId/media` | 그룹 내 게시글 이미지 모음 | 그룹 접근 권한 |
+## Route Map
 
-## 게시글
+| Route                                 | Module                                          | Guard                | Description                                                           |
+| ------------------------------------- | ----------------------------------------------- | -------------------- | --------------------------------------------------------------------- |
+| `/`                                   | `app/routes/home.tsx`                           | `accepted`           | Main page with profile summary, favorites, meals, and menu shortcuts. |
+| `/login`                              | `app/routes/auth/login.tsx`                     | `public-only`        | Google OAuth login entry.                                             |
+| `/logout`                             | `app/routes/auth/logout.tsx`                    | `authenticated`      | Sign out flow.                                                        |
+| `/profile/set`                        | `app/routes/onboarding/set-profile.tsx`         | `authenticated`      | Required profile setup after first sign-in.                           |
+| `/pending`                            | `app/routes/onboarding/pending.tsx`             | `authenticated`      | Admin approval pending state.                                         |
+| `/rejected`                           | `app/routes/onboarding/rejected.tsx`            | `authenticated`      | Account approval rejected state.                                      |
+| `/search`                             | `app/routes/home/search.tsx`                    | `accepted`           | Global group and user search.                                         |
+| `/menu`                               | `app/routes/home/menu.tsx`                      | `accepted`           | Settings, shortcuts, profile edit, and logout.                        |
+| `/profile`                            | `app/routes/profile/my-profile.tsx`             | `accepted`           | Current user's profile.                                               |
+| `/profile/edit`                       | `app/routes/profile/edit-profile.tsx`           | `accepted`           | Current user's profile edit page.                                     |
+| `/profile/:userId`                    | `app/routes/profile/user-profile.tsx`           | `accepted`           | Another user's profile.                                               |
+| `/profile/:userId/posts`              | `app/routes/profile/user-posts.tsx`             | `accepted`           | Posts written by a user.                                              |
+| `/groups`                             | `app/routes/groups/groups.tsx`                  | `accepted`           | Official, private, and favorite groups.                               |
+| `/groups/new`                         | `app/routes/groups/new-group.tsx`               | `accepted`           | Create a private group.                                               |
+| `/groups/:groupId`                    | `app/routes/groups/group-home.tsx`              | `group-access`       | Group home and post list.                                             |
+| `/groups/:groupId/about`              | `app/routes/groups/group-about.tsx`             | `group-access`       | Group description.                                                    |
+| `/groups/:groupId/members`            | `app/routes/groups/group-members.tsx`           | `group-access`       | Group members.                                                        |
+| `/groups/:groupId/settings`           | `app/routes/groups/group-settings.tsx`          | `group-member`       | Notifications, favorite, report, and leave group settings.            |
+| `/groups/:groupId/manage`             | `app/routes/groups/group-manage.tsx`            | `group-manager`      | Group metadata and member management.                                 |
+| `/groups/:groupId/search`             | `app/routes/groups/group-search.tsx`            | `group-access`       | Search posts inside a group.                                          |
+| `/groups/:groupId/media`              | `app/routes/groups/group-media.tsx`             | `group-access`       | Images attached to group posts.                                       |
+| `/groups/:groupId/posts/new`          | `app/routes/groups/new-post.tsx`                | `group-member`       | Create a group post.                                                  |
+| `/groups/:groupId/posts/:postId`      | `app/routes/groups/post-detail.tsx`             | `group-access`       | Post detail, comments, replies, and reactions.                        |
+| `/groups/:groupId/posts/:postId/edit` | `app/routes/groups/edit-post.tsx`               | `post-owner`         | Edit an existing post.                                                |
+| `/chat`                               | `app/routes/chat/chat-list.tsx`                 | `accepted`           | Chat room list.                                                       |
+| `/chat/new`                           | `app/routes/chat/new-chat.tsx`                  | `accepted`           | Start a direct or group chat.                                         |
+| `/chat/:roomId`                       | `app/routes/chat/chat-room.tsx`                 | `chat-room-member`   | Chat room detail.                                                     |
+| `/chat/:roomId/settings`              | `app/routes/chat/chat-settings.tsx`             | `chat-room-member`   | Chat room settings and members.                                       |
+| `/noti`                               | `app/routes/notifications.tsx`                  | `accepted`           | Non-chat notifications.                                               |
+| `/gongang`                            | `app/routes/life/gongang.tsx`                   | `accepted`           | Free-period reservations and status.                                  |
+| `/karaoke`                            | `app/routes/life/karaoke.tsx`                   | `karaoke-permission` | Karaoke features.                                                     |
+| `/meal`                               | `app/routes/life/meal.tsx`                      | `accepted`           | Today's meals.                                                        |
+| `/timetable`                          | `app/routes/life/timetable.tsx`                 | `accepted`           | Timetable.                                                            |
+| `/gisangsong`                         | `app/routes/gisangsong/gisangsong.tsx`          | `accepted`           | Wake-up song list and today's song.                                   |
+| `/gisangsong/request`                 | `app/routes/gisangsong/request.tsx`             | `accepted`           | Request a wake-up song.                                               |
+| `/admin/gisangsong`                   | `app/routes/gisangsong/manage.tsx`              | `admin`              | Manage wake-up songs.                                                 |
+| `/clubs`                              | `app/routes/clubs/clubs.tsx`                    | `accepted`           | Club list.                                                            |
+| `/clubs/:clubId`                      | `app/routes/clubs/club-detail.tsx`              | `accepted`           | Club detail.                                                          |
+| `/clubs/:clubId/applications`         | `app/routes/clubs/club-applications.tsx`        | `accepted`           | Club application page.                                                |
+| `/admin/clubs`                        | `app/routes/clubs/manage-clubs.tsx`             | `admin`              | Create, edit, and delete clubs.                                       |
+| `/admin/clubs/:clubId/applications`   | `app/routes/clubs/manage-club-applications.tsx` | `club-manager`       | Review club applications.                                             |
+| `/403`                                | `app/routes/errors/forbidden.tsx`               | none                 | Access denied.                                                        |
+| `/404`                                | `app/routes/errors/not-found.tsx`               | none                 | Page not found.                                                       |
+| `/500`                                | `app/routes/errors/server-error.tsx`            | none                 | Server error.                                                         |
+| `*`                                   | `app/routes/errors/not-found.tsx`               | none                 | Catch-all fallback.                                                   |
 
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/groups/:groupId/posts/new` | 그룹 게시글 작성 | 그룹 멤버 |
-| `/groups/:groupId/posts/:postId` | 게시글 상세, 댓글, 답글, 반응 | 게시글 접근 권한 |
-| `/groups/:groupId/posts/:postId/edit` | 게시글 수정 | 작성자 |
+## Future Auth Wiring
 
-## 댓글 / 반응
-
-| 위치 | 설명 | 접근 권한 |
-| --- | --- | --- |
-| 게시글 상세 내부 | 댓글 작성 | 그룹 멤버 |
-| 게시글 상세 내부 | 댓글 수정 | 작성자 |
-| 게시글 상세 내부 | 댓글 삭제 | 작성자, group admin/owner, site admin |
-| 게시글 목록 / 상세 내부 | 게시글 반응 | 게시글 접근 권한 |
-| 게시글 상세 내부 | 댓글 반응 | 게시글 접근 권한 |
-
-## 채팅
-
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/chat` | 채팅방 목록 | accepted 유저 |
-| `/chat/new` | 새 1:1 채팅 또는 그룹 채팅 생성 | accepted 유저 |
-| `/chat/:roomId` | 채팅방 상세 | chat room member |
-| `/chat/:roomId/settings` | 채팅방 설정 / 멤버 확인 | chat room member |
-
-## 알림
-
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/noti` | 알림 목록. 채팅 알림은 제외 | accepted 유저 |
-
-## 공강 / 생활 기능
-
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/gongang` | 공강 목록 / 예약 현황 | accepted 유저 |
-| `/karaoke` | 노래방 관련 기능 | accepted 유저 + karaoke permission |
-| `/meal` | 오늘의 급식 | accepted 유저 |
-| `/timetable` | 시간표 | accepted 유저 |
-
-## 기상송
-
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/gisangsong` | 기상송 목록 / 오늘의 기상송 | accepted 유저 |
-| `/gisangsong/request` | 기상송 신청 | accepted 유저 |
-| `/admin/gisangsong` | 기상송 관리 | site admin |
-
-## 동아리
-
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/clubs` | 동아리 목록 | accepted 유저 |
-| `/clubs/:clubId` | 동아리 상세 | accepted 유저 |
-| `/clubs/:clubId/applications` | 동아리 신청 | accepted 유저 |
-| `/admin/clubs` | 동아리 생성 / 수정 / 삭제 | site admin |
-| `/admin/clubs/:clubId/applications` | 동아리 신청자 관리 | site admin 또는 club manager |
-
-## 관리자 - 미정
-
-## 에러 / 상태
-
-| Route | 설명 | 접근 권한 |
-| --- | --- | --- |
-| `/403` | 접근 권한 없음 | 전체 |
-| `/404` | 존재하지 않는 페이지 | 전체 |
-| `/500` | 서버 오류 | 전체 |
+- `/` should redirect based on session and profile status: `/login`, `/profile/set`, `/pending`, `/rejected`, or the accepted home page.
+- Guard layouts should later read Supabase Auth/session/profile state and redirect or render `/403` as needed.
+- Use route `clientLoader` and `clientAction` for client-side data work in SPA mode. Do not add server-only loaders unless SSR/pre-rendering is intentionally enabled.
