@@ -5,7 +5,7 @@ import {
   ShapesIcon,
   UserCircleIcon,
 } from "lucide-react"
-import { NavLink } from "react-router"
+import { NavLink, useLocation } from "react-router"
 
 import {
   Sidebar,
@@ -14,30 +14,27 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar"
-import { cn } from "~/lib/utils"
 
 const mainNavItems = [
-  { to: "/", label: "Home", icon: HomeIcon, end: true },
-  { to: "/groups", label: "Groups", icon: ShapesIcon },
-  { to: "/community", label: "Community", icon: MessageSquareIcon },
-  { to: "/messenger", label: "Messenger", icon: MessagesSquareIcon },
-  { to: "/profile", label: "Profile", icon: UserCircleIcon },
+  { to: "/", label: "Home", icon: HomeIcon, end: true, isActive: false },
+  { to: "/groups", label: "Groups", icon: ShapesIcon, isActive: false },
+  { to: "/community", label: "Community", icon: MessageSquareIcon, isActive: false },
+  { to: "/messenger", label: "Messenger", icon: MessagesSquareIcon, isActive: false },
+  { to: "/profile", label: "Profile", icon: UserCircleIcon, isActive: false },
 ]
 
 export function AppSidebar() {
+  const location = useLocation()
+  mainNavItems.forEach(
+    (item) =>
+      (item.isActive = item.end ? location.pathname === "/" : location.pathname.startsWith(item.to))
+  )
   return (
     <Sidebar collapsible="offcanvas" className="md:top-14 md:h-[calc(100svh-3.5rem)]">
-      <SidebarHeader>
-        <div className="flex flex-col gap-1 px-2 py-1">
-          <p className="text-sm font-semibold">KMLA Online</p>
-          <p className="text-muted-foreground text-xs">School community</p>
-        </div>
-      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
@@ -45,18 +42,13 @@ export function AppSidebar() {
             <SidebarMenu>
               {mainNavItems.map((item) => (
                 <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild isActive={item.isActive}>
                     <NavLink
                       to={item.to}
                       end={item.end}
-                      className={({ isActive }) =>
-                        cn(
-                          "flex items-center gap-2",
-                          isActive && "bg-sidebar-accent text-sidebar-accent-foreground"
-                        )
-                      }
+                      className="text-sidebar-foreground flex items-center gap-2"
                     >
-                      <item.icon />
+                      <item.icon strokeWidth={item.isActive ? 2.5 : 2} />
                       <span>{item.label}</span>
                     </NavLink>
                   </SidebarMenuButton>

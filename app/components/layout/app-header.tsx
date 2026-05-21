@@ -16,13 +16,16 @@ function getInitials(email: string) {
 
 export function AppHeader({ email }: AppHeaderProps) {
   return (
-    <header className="bg-background/95 sticky top-0 z-10 flex h-14 items-center gap-2 border-b px-3 backdrop-blur sm:px-4">
-      <SidebarTrigger className="md:hidden" />
-      <div className="relative w-full max-w-md">
-        <SearchIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2" />
-        <Input className="pl-8" placeholder="Search groups, posts, and people" />
+    <header className="bg-background/95 sticky top-0 z-10 grid h-14 grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] items-center gap-3 border-b px-3 backdrop-blur sm:px-4">
+      <div className="flex items-center gap-2">
+        <SidebarTrigger className="md:hidden" />
+        <p className="text-sm font-semibold tracking-wide">KMLA</p>
       </div>
-      <div className="ml-auto flex items-center gap-2">
+      <div className="relative mx-auto w-full max-w-xl">
+        <SearchIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2" />
+        <Input className="h-9 pl-9" placeholder="Search groups, posts, and people" />
+      </div>
+      <div className="ml-auto flex items-center gap-2 justify-self-end">
         <Button variant="ghost" size="icon" aria-label="Notifications">
           <BellIcon />
         </Button>

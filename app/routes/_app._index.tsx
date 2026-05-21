@@ -11,6 +11,7 @@ const summaryItems = [
 
 const feedItems = [
   {
+    id: 1,
     source: "Group: Student Council",
     title: "Spring Festival volunteer sign-up closes tomorrow",
     description:
@@ -20,6 +21,7 @@ const feedItems = [
     comments: 8,
   },
   {
+    id: 2,
     source: "Community: Lost Gadgets",
     title: "Found wireless earbuds near the library entrance",
     description: "If these are yours, send a message with the case color to verify ownership.",
@@ -28,6 +30,7 @@ const feedItems = [
     comments: 11,
   },
   {
+    id: 3,
     source: "Community: Secondhand Transactions",
     title: "Selling TI graphing calculator in good condition",
     description: "Includes cover and extra batteries. Available for pickup after study hall.",
@@ -36,6 +39,7 @@ const feedItems = [
     comments: 5,
   },
   {
+    id: 4,
     source: "Community: Secondhand Transactions",
     title: "Selling TI graphing calculator in good condition",
     description: "Includes cover and extra batteries. Available for pickup after study hall.",
@@ -84,21 +88,21 @@ export default function AppHomePage() {
         </TabsList>
         <TabsContent value="all" className="mt-3 flex flex-col gap-3">
           {feedItems.map((item) => (
-            <FeedPostCard key={item.title} {...item} />
+            <FeedPostCard key={item.id} {...item} />
           ))}
         </TabsContent>
         <TabsContent value="groups" className="mt-3 flex flex-col gap-3">
           {feedItems
             .filter((item) => item.source.startsWith("Group:"))
             .map((item) => (
-              <FeedPostCard key={item.title} {...item} />
+              <FeedPostCard key={item.id} {...item} />
             ))}
         </TabsContent>
         <TabsContent value="community" className="mt-3 flex flex-col gap-3">
           {feedItems
             .filter((item) => item.source.startsWith("Community:"))
             .map((item) => (
-              <FeedPostCard key={item.title} {...item} />
+              <FeedPostCard key={item.id} {...item} />
             ))}
         </TabsContent>
       </Tabs>
