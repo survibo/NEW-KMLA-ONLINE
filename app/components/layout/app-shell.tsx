@@ -16,9 +16,9 @@ export function AppShell({ email }: AppShellProps) {
         <div className="flex min-h-0 flex-1">
           <AppSidebar />
           <SidebarInset className="min-h-0">
-            <main className="bg-muted/25 flex flex-1 flex-col overflow-y-auto p-4 sm:p-6">
+            <div className="bg-muted/25 flex flex-1 flex-col overflow-y-auto p-4 sm:p-6">
               <Outlet />
-            </main>
+            </div>
           </SidebarInset>
         </div>
       </div>
