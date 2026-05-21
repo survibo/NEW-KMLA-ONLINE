@@ -1,0 +1,37 @@
+import { Badge } from "~/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
+
+type FeedPostCardProps = {
+  source: string
+  title: string
+  description: string
+  author: string
+  time: string
+  comments: number
+}
+
+export function FeedPostCard({
+  source,
+  title,
+  description,
+  author,
+  time,
+  comments,
+}: FeedPostCardProps) {
+  return (
+    <Card className="border-border/70">
+      <CardHeader className="gap-2">
+        <div className="flex items-center justify-between">
+          <Badge variant="secondary">{source}</Badge>
+          <p className="text-muted-foreground text-xs">{time}</p>
+        </div>
+        <CardTitle className="text-base">{title}</CardTitle>
+        <CardDescription className="text-sm">{description}</CardDescription>
+      </CardHeader>
+      <CardContent className="text-muted-foreground flex items-center justify-between text-xs">
+        <p>Posted by {author}</p>
+        <p>{comments} comments</p>
+      </CardContent>
+    </Card>
+  )
+}
