@@ -22,12 +22,11 @@ export function MobileTabBar() {
                 to={item.to}
                 end={item.end}
                 className={cn(
-                  "text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-1 px-1 text-[11px] font-medium",
+                  "text-muted-foreground flex h-full w-full items-center justify-center px-1",
                   isActive && "text-primary"
                 )}
               >
-                <item.icon className="size-4" strokeWidth={isActive ? 2.5 : 2} />
-                <span className="truncate">{item.label}</span>
+                <item.icon className="size-5" strokeWidth={isActive ? 2.5 : 2} />
               </NavLink>
             </li>
           )
