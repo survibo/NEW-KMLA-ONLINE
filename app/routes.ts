@@ -6,6 +6,7 @@ export default [
     route("groups", "./routes/_app.groups.tsx"),
     route("community", "./routes/_app.community.tsx"),
     route("messenger", "./routes/_app.messenger.tsx"),
+    route("menu", "./routes/_app.menu.tsx"),
     route("profile", "./routes/_app.profile.tsx"),
   ]),
   route("login", "./routes/login.tsx"),
