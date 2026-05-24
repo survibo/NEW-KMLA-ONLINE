@@ -1,13 +1,14 @@
 import { Badge } from "~/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
 
-type FeedPostCardProps = {
+export type FeedPostCardProps = {
   source: string
   title: string
   description: string
   author: string
   time: string
   comments: number
+  isFeatured?: boolean
 }
 
 export function FeedPostCard({
@@ -17,12 +18,16 @@ export function FeedPostCard({
   author,
   time,
   comments,
+  isFeatured = false,
 }: FeedPostCardProps) {
   return (
-    <Card className="border-border/70">
+    <Card className="border-0 shadow-none ring-0">
       <CardHeader className="gap-2">
         <div className="flex items-center justify-between">
-          <Badge variant="secondary">{source}</Badge>
+          <div className="flex items-center gap-2">
+            {isFeatured ? <Badge>Featured</Badge> : null}
+            <Badge variant="secondary">{source}</Badge>
+          </div>
           <p className="text-muted-foreground text-xs">{time}</p>
         </div>
         <CardTitle className="text-base">{title}</CardTitle>
