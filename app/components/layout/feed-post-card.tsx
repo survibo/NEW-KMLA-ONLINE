@@ -1,3 +1,4 @@
+import { PostActionBar } from "~/components/post-action-bar"
 import { Badge } from "~/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
 
@@ -8,6 +9,7 @@ export type FeedPostCardProps = {
   author: string
   time: string
   comments: number
+  likes: number
   isFeatured?: boolean
 }
 
@@ -18,6 +20,7 @@ export function FeedPostCard({
   author,
   time,
   comments,
+  likes,
   isFeatured = false,
 }: FeedPostCardProps) {
   return (
@@ -33,9 +36,13 @@ export function FeedPostCard({
         <CardTitle className="text-base">{title}</CardTitle>
         <CardDescription className="text-sm">{description}</CardDescription>
       </CardHeader>
-      <CardContent className="text-muted-foreground flex items-center justify-between text-xs">
+      <CardContent className="text-muted-foreground flex items-center justify-between gap-2 text-xs">
         <p>Posted by {author}</p>
-        <p>{comments} comments</p>
+        <PostActionBar
+          comments={comments}
+          likes={likes}
+          className="flex flex-wrap items-center justify-end gap-1"
+        />
       </CardContent>
     </Card>
   )

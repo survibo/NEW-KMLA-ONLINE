@@ -9,6 +9,7 @@ const feedItems = [
     author: "Academic Office",
     time: "2h ago",
     comments: 3,
+    likes: 14,
     isFeatured: true,
   },
   {
@@ -19,6 +20,7 @@ const feedItems = [
     author: "Student Council",
     time: "15m ago",
     comments: 8,
+    likes: 21,
   },
   {
     source: "Community: Lost Gadgets",
@@ -27,6 +29,7 @@ const feedItems = [
     author: "2-3 J. Kim",
     time: "43m ago",
     comments: 11,
+    likes: 9,
   },
   {
     source: "Community: Secondhand Transactions",
@@ -35,6 +38,7 @@ const feedItems = [
     author: "3-2 H. Lee",
     time: "1h ago",
     comments: 5,
+    likes: 6,
   },
   {
     source: "Community: Secondhand Transactions",
@@ -43,6 +47,7 @@ const feedItems = [
     author: "3-2 H. Lee",
     time: "1h ago",
     comments: 5,
+    likes: 6,
   },
 ]
 
