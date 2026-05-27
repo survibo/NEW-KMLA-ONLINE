@@ -1,14 +1,8 @@
 import { redirect, useFetcher, type ActionFunctionArgs } from "react-router"
 
-import { createClient } from "@/registry/default/clients/react-router/lib/supabase/server"
-import { Button } from "@/registry/default/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/registry/default/components/ui/card"
+import { createClient } from "~/lib/supabase/server"
+import { Button } from "~/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { supabase } = createClient(request)
